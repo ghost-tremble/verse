@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import ChatIcon from '@material-ui/icons/Chat';
+
 import React from 'react';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import { auth, db } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SearchIcon from '@material-ui/icons/Search';
 import {
@@ -18,6 +21,7 @@ const Sidebar = () => {
     .where('users', 'array-contains', user.email);
   const [chatsSnapshot] =
     useCollection(userChatRef);
+
   const createChat = () => {
     const input = prompt(
       'please enter an email address for the user you wish to chat with'
@@ -68,13 +72,22 @@ const Sidebar = () => {
       <SidebarButton onClick={() => createChat()}>
         Start a new chart
       </SidebarButton>
-      {chatsSnapshot?.docs.map((chat) => (
-        <Chat
-          key={chat.id}
-          id={chat.id}
-          users={chat.data().users}
-        />
-      ))}
+      <div>
+        {chatsSnapshot?.docs ? (
+          chatsSnapshot?.docs.map((chat) => {
+            return (
+              <Chat
+                key={chat.id}
+                id={chat.id}
+                users={chat.data().users}
+              />
+            );
+          })
+        ) : (
+          <p></p>
+        )}
+      </div>
+
       {/* list of chats */}
     </Container>
   );

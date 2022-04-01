@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Head } from 'next/head';
+import Head from 'next/head';
 import { auth, db } from '../../firebase';
+import ChatScreen from '../../components/ChatScreen';
 import getRecipientEmail from '../../utils/getRecipientEmail';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Sidebar from '../../components/Sidebar';
@@ -39,7 +40,8 @@ export async function getServerSideProps(
 
   const messageRes = await ref
     .collection('messages')
-    .orderBy('timestamp', 'asc').get;
+    .orderBy('timestamp', 'asc')
+    .get();
 
   const messages = messageRes.docs
     .map((doc) => ({
@@ -62,7 +64,7 @@ export async function getServerSideProps(
 
   return {
     props: {
-      messages: JSON.strigify(messages),
+      messages: JSON.stringify(messages),
       chat: chat,
     },
   };

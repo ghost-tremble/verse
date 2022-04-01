@@ -1,23 +1,37 @@
 import styled from 'styled-components';
+import { useRef, useState } from 'react';
 import {
   Avatar,
   IconButton,
 } from '@material-ui/core';
+import Message from './Message';
+import getRecipientEmail from '../utils/getRecipientEmail';
 import TimeAgo from 'timeago-react';
-import { MoreVertIcon } from '@material-ui/icons/MoreVertIcon';
-import { AttachFileIcon } from '@material-ui/icons/AttachFileIcon';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { auth, db } from '../firebase';
+
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import { useRouter } from 'next/router';
-import { useCollection } from 'react-firebase-hooks';
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import MicIcon from '@material-ui/icons/Mic';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/compat/app';
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
   const router = useRouter();
   const [input, setInput] = useState('');
+  const endOfMessagesRef = useRef(null);
+  const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({
+      behaviour: 'smooth',
+      block: 'start',
+    });
+  };
   const [messagesSnapshot] = useCollection(
     db
       .collection('chats')
-      .docs(router.query.id)
+      .doc(router.query.id)
       .collection('messages')
       .orderBy('timestamp', 'asc')
   );
@@ -44,6 +58,7 @@ const ChatScreen = ({ chat, messages }) => {
       });
 
     setInput('');
+    scrollToBottom();
   };
   const showMessages = () => {
     if (messagesSnapshot) {
@@ -127,10 +142,12 @@ const ChatScreen = ({ chat, messages }) => {
       </Header>
       <MessageContainer>
         {showMessages()}
-        <EndOfMessage />
+        <EndOfMessage ref={endOfMessagesRef} />
       </MessageContainer>
       <InputContainer>
-        <InsertEmoticonIcon />
+        <IconButton>
+          <InsertEmoticonIcon />
+        </IconButton>
         <Input
           value={input}
           onChange={(e) =>
@@ -144,7 +161,9 @@ const ChatScreen = ({ chat, messages }) => {
           onClick={sendMessage}>
           Send message
         </button>
-        <MicIcon />
+        <IconButton>
+          <MicIcon />
+        </IconButton>
       </InputContainer>
     </Container>
   );
@@ -178,7 +197,9 @@ const HeaderInformation = styled.div`
 `;
 const HeaderIcons = styled.div``;
 
-const EndOfMessage = styled.div``;
+const EndOfMessage = styled.div`
+  margin-bottom: 50px;
+`;
 const MessageContainer = styled.div`
   padding: 30px;
   background-color: #e5ded8;

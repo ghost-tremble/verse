@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import { auth, provider } from '../firebase';
 const Login = () => {
   const signIn = () => {
-    auth.SignInWithPopup(provider).catch(alert);
+    auth.signInWithPopup(provider).catch(alert);
   };
   return (
     <Container>

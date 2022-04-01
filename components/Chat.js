@@ -1,7 +1,9 @@
 import { Avatar } from '@material-ui/core';
 import React from 'react';
+import { db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import { useRouter } from 'next/router';
 import getRecipientEmail from '../utils/getRecipientEmail';
 import styled from 'styled-components';
@@ -10,7 +12,7 @@ const Chat = ({ id, users }) => {
   const [user] = useAuthState(auth);
   const [recipientSnapshot] = useCollection(
     db
-      .collction('users')
+      .collection('users')
       .where(
         'email',
         '==',
@@ -18,7 +20,7 @@ const Chat = ({ id, users }) => {
       )
   );
   const recipient =
-    getRecipientEmail()?.docs?.[0]?.data();
+    recipientSnapshot?.docs?.[0]?.data();
   const recipientEmail = getRecipientEmail(
     users,
     user
@@ -29,8 +31,8 @@ const Chat = ({ id, users }) => {
     router.push(`/chat/${id}`);
   };
   return (
-    <Container>
-      {recipient ? (
+    <Container onClick={startChat}>
+      {recipient && recipientEmail ? (
         <UserAvatar src={recipient?.photoUrl} />
       ) : (
         <UserAvatar>
@@ -38,7 +40,7 @@ const Chat = ({ id, users }) => {
         </UserAvatar>
       )}
 
-      <p>Recipient Email</p>
+      <p>{recipientEmail}</p>
     </Container>
   );
 };

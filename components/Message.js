@@ -1,9 +1,10 @@
 import React from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
-import { useAuthState } from 'react-firebase-hooks';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
 
-import { MicIcon } from '@material-ui/icons/MicIcon';
+import { MicIcon } from '@material-ui/icons/Mic';
 const Message = ({ user, message }) => {
   const [userLoggedIn] = useAuthState(auth);
   const TypeOfMessage =
@@ -14,6 +15,13 @@ const Message = ({ user, message }) => {
     <Container>
       <TypeOfMessage>
         {message.message}
+        <Timestamp>
+          {message.timestamp
+            ? moment(message.timestamp).format(
+                'LT'
+              )
+            : '...'}
+        </Timestamp>
       </TypeOfMessage>
     </Container>
   );
