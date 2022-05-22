@@ -17,7 +17,10 @@ import MicIcon from '@material-ui/icons/Mic';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/compat/app';
+import Settings from './Settings';
 const ChatScreen = ({ chat, messages }) => {
+  const [showSetting, setShowSetting] =
+    useState(false);
   const [user] = useAuthState(auth);
   const router = useRouter();
   const [input, setInput] = useState('');
@@ -135,19 +138,25 @@ const ChatScreen = ({ chat, messages }) => {
           <IconButton>
             <AttachFileIcon />
           </IconButton>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              setShowSetting(!showSetting);
+            }}>
             <MoreVertIcon />
           </IconButton>
         </HeaderIcons>
+        <Settings
+          displayMode={
+            showSetting ? 'flex' : 'none'
+          }
+        />
       </Header>
       <MessageContainer>
         {showMessages()}
         <EndOfMessage ref={endOfMessagesRef} />
       </MessageContainer>
       <InputContainer>
-        <IconButton>
-          <InsertEmoticonIcon />
-        </IconButton>
+        <IconButton></IconButton>
         <Input
           value={input}
           onChange={(e) =>
