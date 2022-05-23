@@ -1,16 +1,16 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const lightTheme = {
-  body: '#fff',
-  text: '#363537',
-  background: '#363537',
-  border: '#363537',
+  body: "#fff",
+  text: "#363537",
+  background: "#363537",
+  border: "#363537",
 };
 export const darkTheme = {
-  body: 'black',
-  text: '#bacbb8',
-  toggleBorder: '#c4c4c4',
-  background: '',
+  body: "black",
+  text: "#bacbb8",
+  toggleBorder: "#c4c4c4",
+  background: "",
 };
 export const GlobalStyles = createGlobalStyle`
   body {
